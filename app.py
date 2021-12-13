@@ -3,32 +3,27 @@ from streamlit_drawable_canvas import st_canvas
 from tensorflow import keras
 import cv2
 import numpy as np
-import pandas as pd
-from io import StringIO ## for Python 3
+model_new = keras.models.load_model('./NumberGuess.model')
 
-model_new = keras.models.load_model('./FashionGuess.model')
-
-st.title("Fashion-MNIST Recognizer")
+st.title("MNIST Digit Recognizer")
 
 SIZE = 192
 
-uploaded_file = st.file_uploader("Choose a file")
-if uploaded_file is not None:
-     # To read file as bytes:
-     bytes_data = uploaded_file.getvalue()
-     st.write(bytes_data)
+canvas_result = st_canvas(
+    fill_color="#ffffff",
+    stroke_width=10,
+    stroke_color='#ffffff',
+    background_color="#000000",
+    height=150,width=150,
+    drawing_mode='freedraw',
+    key="canvas",
+)
 
-     # To convert to a string based IO:
-     stringio = StringIO(uploaded_file.getvalue().decode('latin-1'))
-     st.write(stringio)
-
-     # To read file as string:
-     string_data = stringio.read()
-     st.write(string_data)
-
-     # Can be used wherever a "file-like" object is accepted:
-     dataframe = pd.read_csv(uploaded_file)
-     st.write(dataframe)
+if canvas_result.image_data is not None:
+    img = cv2.resize(canvas_result.image_data.astype('uint8'), (28, 28))
+    img_rescaling = cv2.resize(img, (SIZE, SIZE), interpolation=cv2.INTER_NEAREST)
+    st.write('Input Image')
+    st.image(img_rescaling)
 
 if st.button('Predict'):
     test_x = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
