@@ -20,7 +20,6 @@ charset-normalizer==2.0.9
 clang==5.0
 click==7.1.2
 cycler==0.11.0
-dataclasses==0.8
 distlib==0.3.4
 entrypoints==0.3
 filelock==3.4.0
